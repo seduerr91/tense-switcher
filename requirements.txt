@@ -1,0 +1,11 @@
+# Tense Switcher
+spacy
+https://github.com/clips/pattern/archive/python3.zip
+pattern
+
+# FastAPI Uvicorn Server
+uvicorn
+FastAPI
+gunicorn
+uvloop
+httptools

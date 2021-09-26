@@ -1,0 +1,23 @@
+set -e
+
+# This file should be the same for all GCR services
+# (it's distributed among all of them as a convention
+# because non-GCR services will have such file too,
+# but it will look differently)
+
+PROJECT=$PERSUAIDE_GOOGLE_CLOUD_PROJECT
+
+if [ -z "$PROJECT" ]
+then
+  echo "You need to set PERSUAIDE_GOOGLE_CLOUD_PROJECT environment variable before running this script. It should be PROJECT_ID from the output of 'gcloud projects list' command."
+  exit 1
+fi
+
+REPOSITORY="$(basename $PWD)"
+echo "Building and deploying gcr.io/$PROJECT/$REPOSITORY"
+
+gcloud config set project $PROJECT
+gcloud config set run/platform managed
+gcloud config set run/region europe-west1
+gcloud builds submit --tag "gcr.io/$PROJECT/$REPOSITORY"
+gcloud run deploy $REPOSITORY --allow-unauthenticated --concurrency 1 --memory 8192Mi --cpu 4 --image gcr.io/$PROJECT/$REPOSITORY
